@@ -15,6 +15,7 @@ export const itemStyles = StyleSheet.create({
     minHeight: 100,
     width: "95%",
     marginHorizontal: 10,
+    marginBottom: 10,
     backgroundColor: colors.backgroundForItem,
     borderStyle: "solid",
     borderColor: colors.borderForItem,
@@ -114,5 +115,105 @@ export const itemStyles = StyleSheet.create({
   description: {
     height: 20,
     width: 170,
+  },
+
+  buttonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  buyButton: {},
+
+  buyButtonText: {
+    fontSize: 15,
+  },
+
+  cartButton: {},
+
+  cartIcon: {
+    resizeMode: "contain",
+    width: 40,
+    height: 20,
+  },
+});
+
+export const inputStyles = StyleSheet.create({
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    minHeight: 64,
+  },
+
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    borderRadius: 7,
+    padding: 10,
+    width: "75%",
+    backgroundColor: colors.inputColor,
+  },
+
+  iconsWrapper: {
+    flexDirection: "row",
+    alignItems: "center,",
+    justifyContent: "space-between",
+    marginRight: 20,
+    marginBottom: 10,
+  },
+
+  favorite: {
+    width: 25,
+    height: 25,
+  },
+
+  search: {
+    width: 25,
+    height: 25,
+    marginLeft: 10,
+  },
+});
+
+export const modalStyles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.overlay,
+    width: "100%",
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: colors.backgroundColor,
+    borderRadius: 20,
+    padding: 100,
+    alignItems: "center",
+    shadowColor: colors.black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 20,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: colors.closeButtonInModal,
+  },
+  textStyle: {
+    color: colors.white,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    fontSize: 25,
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
