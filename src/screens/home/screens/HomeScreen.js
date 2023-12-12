@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,10 @@ import {
   TextInput,
   Pressable,
   SafeAreaView,
+  ScrollView,
   TouchableOpacity,
+  RefreshControl,
+  Dimensions,
 } from "react-native";
 import { globalStyles, itemStyles, inputStyles, modalStyles } from "./styles";
 
@@ -119,14 +122,42 @@ export const HomeScreen = () => {
     },
   ];
 
+  const pizzaData = [
+    {
+      image:
+        "https://img.freepik.com/premium-vector/pizza-sale-flyer_124507-1644.jpg",
+    },
+    {
+      image:
+        "https://img.freepik.com/free-vector/pizza-time-isometric_1284-22330.jpg",
+    },
+    {
+      image:
+        "https://img.freepik.com/free-photo/beautiful-mexican-party-decoration-with-food_23-2149317348.jpg",
+    },
+    {
+      image:
+        "https://img.freepik.com/free-psd/delicious-burger-food-menu-instagram-facebook-story-template_120329-1645.jpg",
+    },
+    {
+      image:
+        "https://img.freepik.com/premium-vector/fast-food-street-snacks-restaurant-vector-menu_8071-22465.jpg",
+    },
+  ];
+
+  const { width, height } = Dimensions.get("screen");
+
   const handleButtonPress = () => {
     Alert.alert("Added to cart");
   };
 
   const [text, onChangeText] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isSearchVisible, setSearchVisibility] = useState(false);
   const [searchResults, setSearchResults] = useState(mockItemData);
+  const [refreshing, setRefreshing] = useState(false);
+  const [additionalData, setAdditionalData] = useState([]);
 
   const toggleSearchVisibility = () => {
     setSearchVisibility(!isSearchVisible);
@@ -141,6 +172,45 @@ export const HomeScreen = () => {
 
     setSearchResults(filteredResults);
   };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  const addAdditionalData = () => {
+    setTimeout(() => {
+      setAdditionalData([
+        {
+          title: "New Item 1",
+          isNew: true,
+          favorite: false,
+          price: 95,
+          image: "https://example.com/new_item_1.jpg",
+          description: "Description for new item 1",
+        },
+      ]);
+    }, 3000);
+  };
+
+  const loadMoreData = () => {
+    const newItems = Array.from({ length: 5 }).map((_, index) => ({
+      title: `New Item ${index + 1}`,
+      isNew: true,
+      favorite: false,
+      price: 90 + index,
+      image: `https://example.com/new_item_${index + 1}.jpg`,
+      description: `Description for new item ${index + 1}`,
+    }));
+
+    setAdditionalData((prevData) => [...prevData, ...newItems]);
+  };
+
+  // const closePhotoGallery = () => {
+  //   setModalVisible(false);
+  // };
 
   const renderItem = ({ item }) => (
     <View style={itemStyles.item}>
@@ -193,6 +263,24 @@ export const HomeScreen = () => {
     </View>
   );
 
+  const renderSwiper = ({ item }) => {
+    return (
+      <View style={{ width: width }}>
+        <Image
+          source={{ uri: item.image }}
+          style={{
+            width: 400,
+            minHeight: 500,
+            maxHeight: 600,
+            resizeMode: "cover",
+            alignContent: "center",
+            marginBottom: 70,
+          }}
+        ></Image>
+      </View>
+    );
+  };
+
   return (
     <SafeAreaView style={globalStyles.container}>
       <View style={inputStyles.inputWrapper}>
@@ -235,13 +323,40 @@ export const HomeScreen = () => {
           <View style={modalStyles.centeredView}>
             <TouchableOpacity activeOpacity={1} onPress={() => {}}>
               <View style={modalStyles.modalView}>
-                <Text style={modalStyles.modalText}>Hello World!</Text>
+                <FlatList
+                  data={pizzaData}
+                  renderItem={renderSwiper}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal
+                  pagingEnabled
+                  showsHorizontalScrollIndicator={false}
+                  onMomentumScrollEnd={(event) => {
+                    const index = Math.floor(
+                      event.nativeEvent.contentOffset.x / width
+                    );
+                    setCurrentIndex(index);
+                  }}
+                />
                 <Pressable
                   style={[modalStyles.button, modalStyles.buttonClose]}
                   onPress={() => setModalVisible(!modalVisible)}
                 >
                   <Text style={modalStyles.textStyle}>Hide Modal</Text>
                 </Pressable>
+                <View style={modalStyles.circleIndicatorContainer}>
+                  {pizzaData.map((_, index) => (
+                    <View
+                      key={index}
+                      style={[
+                        modalStyles.circleIndicator,
+                        {
+                          backgroundColor:
+                            index === currentIndex ? colors.blue : colors.grey,
+                        },
+                      ]}
+                    />
+                  ))}
+                </View>
               </View>
             </TouchableOpacity>
           </View>
@@ -249,9 +364,14 @@ export const HomeScreen = () => {
       </Modal>
 
       <FlatList
-        data={searchResults}
+        data={[...searchResults, ...additionalData]}
         keyExtractor={(item) => item.toString()}
         renderItem={renderItem}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        onEndReached={loadMoreData}
+        onEndReachedThreshold={0.1}
       />
     </SafeAreaView>
   );

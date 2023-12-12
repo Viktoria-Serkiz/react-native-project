@@ -7,6 +7,13 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.backgroundColor,
   },
+
+  scrollView: {
+    flex: 1,
+    backgroundColor: "pink",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export const itemStyles = StyleSheet.create({
@@ -187,7 +194,7 @@ export const modalStyles = StyleSheet.create({
     margin: 20,
     backgroundColor: colors.backgroundColor,
     borderRadius: 20,
-    padding: 100,
+    padding: 30,
     alignItems: "center",
     shadowColor: colors.black,
     shadowOffset: {
@@ -197,23 +204,33 @@ export const modalStyles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    width: "80%",
   },
+
   button: {
     borderRadius: 20,
     padding: 20,
     elevation: 2,
   },
+
   buttonClose: {
     backgroundColor: colors.closeButtonInModal,
   },
+
   textStyle: {
     color: colors.white,
     fontWeight: "bold",
     textAlign: "center",
   },
+
   modalText: {
     fontSize: 25,
     marginBottom: 15,
     textAlign: "center",
+  },
+
+  photoGalleryImage: {
+    width: 30,
+    height: 50,
   },
 });
