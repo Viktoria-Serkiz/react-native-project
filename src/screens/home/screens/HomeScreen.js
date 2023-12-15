@@ -8,11 +8,14 @@ import {
   FlatList,
   TextInput,
   Pressable,
+  Share,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  Linking,
   Dimensions,
+  Button,
 } from "react-native";
 import { globalStyles, itemStyles, inputStyles, modalStyles } from "./styles";
 
@@ -208,10 +211,6 @@ export const HomeScreen = () => {
     setAdditionalData((prevData) => [...prevData, ...newItems]);
   };
 
-  // const closePhotoGallery = () => {
-  //   setModalVisible(false);
-  // };
-
   const renderItem = ({ item }) => (
     <View style={itemStyles.item}>
       <View style={itemStyles.photoContainer}>
@@ -263,21 +262,28 @@ export const HomeScreen = () => {
     </View>
   );
 
+  const handleShare = (item) => {
+    const imageUrl = item.image;
+
+    Linking.openURL(`mailto:https://www.pizzaday.com.ua/address}`);
+  };
+
   const renderSwiper = ({ item }) => {
     return (
-      <View style={{ width: width }}>
-        <Image
-          source={{ uri: item.image }}
-          style={{
-            width: 400,
-            minHeight: 500,
-            maxHeight: 600,
-            resizeMode: "cover",
-            alignContent: "center",
-            marginBottom: 70,
-          }}
-        ></Image>
-      </View>
+      <TouchableOpacity onPress={() => handleShare(item)}>
+        <View style={{ width: width }}>
+          <Image
+            source={{ uri: item.image }}
+            style={{
+              width: 400,
+              minHeight: 500,
+              maxHeight: 600,
+              resizeMode: "cover",
+              marginBottom: 70,
+            }}
+          />
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -315,52 +321,83 @@ export const HomeScreen = () => {
           setModalVisible(!modalVisible);
         }}
       >
-        <TouchableOpacity
-          style={modalStyles.centeredView}
-          activeOpacity={1}
-          onPress={() => setModalVisible(false)}
-        >
-          <View style={modalStyles.centeredView}>
-            <TouchableOpacity activeOpacity={1} onPress={() => {}}>
-              <View style={modalStyles.modalView}>
-                <FlatList
-                  data={pizzaData}
-                  renderItem={renderSwiper}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal
-                  pagingEnabled
-                  showsHorizontalScrollIndicator={false}
-                  onMomentumScrollEnd={(event) => {
-                    const index = Math.floor(
-                      event.nativeEvent.contentOffset.x / width
-                    );
-                    setCurrentIndex(index);
+        <SafeAreaView style={modalStyles.centeredView}>
+          <Text style={modalStyles.modalText}>Sale</Text>
+          <FlatList
+            data={pizzaData}
+            renderItem={({ item, index }) => (
+              <View key={index} style={{ width, height }}>
+                <Image
+                  source={{ uri: item.image }}
+                  style={{
+                    width: width * 0.8,
+                    height: height * 0.6,
+                    resizeMode: "contain",
+                    alignSelf: "center",
                   }}
                 />
-                <Pressable
-                  style={[modalStyles.button, modalStyles.buttonClose]}
-                  onPress={() => setModalVisible(!modalVisible)}
-                >
-                  <Text style={modalStyles.textStyle}>Hide Modal</Text>
-                </Pressable>
-                <View style={modalStyles.circleIndicatorContainer}>
-                  {pizzaData.map((_, index) => (
-                    <View
-                      key={index}
-                      style={[
-                        modalStyles.circleIndicator,
-                        {
-                          backgroundColor:
-                            index === currentIndex ? colors.blue : colors.grey,
-                        },
-                      ]}
-                    />
-                  ))}
-                </View>
               </View>
-            </TouchableOpacity>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={(event) => {
+              const index = Math.floor(
+                event.nativeEvent.contentOffset.x / width
+              );
+              setCurrentIndex(index);
+            }}
+            onLayout={() => {
+              setTimeout(() => {
+                const newIndex = (currentIndex + 1) % pizzaData.length;
+                setCurrentIndex(newIndex);
+                flatListRef?.scrollToIndex({ animated: true, index: newIndex });
+              }, 5000);
+            }}
+            ref={(ref) => {
+              flatListRef = ref;
+            }}
+            onPress={handleShare}
+          />
+          <FlatList
+            data={pizzaData}
+            horizontal
+            showsHorizontalScrollIndicator={true}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <View
+                style={[
+                  modalStyles.indicator,
+                  {
+                    backgroundColor:
+                      index === currentIndex ? colors.blue : colors.grey,
+                  },
+                ]}
+              />
+            )}
+          />
+          <View style={modalStyles.buttonContainer}>
+            <Pressable
+              style={[modalStyles.button, modalStyles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={modalStyles.textStyle}>Hide Modal</Text>
+            </Pressable>
+            <Pressable
+              style={[modalStyles.button, modalStyles.buttonShare]}
+              onPress={() =>
+                renderSwiper({ item: { image: pizzaData[currentIndex].image } })
+              }
+            >
+              <Button
+                title="Share"
+                style={modalStyles.textStyle}
+                onPress={handleShare}
+              ></Button>
+            </Pressable>
           </View>
-        </TouchableOpacity>
+        </SafeAreaView>
       </Modal>
 
       <FlatList
@@ -376,3 +413,54 @@ export const HomeScreen = () => {
     </SafeAreaView>
   );
 };
+
+{
+  /* <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <SafeAreaView style={modalStyles.centeredView}>
+          <View style={modalStyles.modalView}>
+            <FlatList
+              data={pizzaData}
+              renderItem={renderSwiper}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onMomentumScrollEnd={(event) => {
+                const index = Math.floor(
+                  event.nativeEvent.contentOffset.x / width
+                );
+                setCurrentIndex(index);
+              }}
+            />
+            <Pressable
+              style={[modalStyles.button, modalStyles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={modalStyles.textStyle}>Hide Modal</Text>
+            </Pressable>
+            <View style={modalStyles.circleIndicatorContainer}>
+              {pizzaData.map((_, index) => (
+                <View
+                  key={index}
+                  style={[
+                    modalStyles.circleIndicator,
+                    {
+                      backgroundColor:
+                        index === currentIndex ? colors.blue : colors.grey,
+                    },
+                  ]}
+                />
+              ))}
+            </View>
+          </View>
+        </SafeAreaView>
+      </Modal> */
+}

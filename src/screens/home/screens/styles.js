@@ -188,7 +188,6 @@ export const modalStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.overlay,
-    width: "100%",
   },
   modalView: {
     margin: 20,
@@ -204,7 +203,6 @@ export const modalStyles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: "80%",
   },
 
   button: {
@@ -232,5 +230,21 @@ export const modalStyles = StyleSheet.create({
   photoGalleryImage: {
     width: 30,
     height: 50,
+  },
+
+  indicatorsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+  },
+  indicator: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: colors.grey,
+    marginHorizontal: 5,
+  },
+  activeIndicator: {
+    backgroundColor: colors.blue,
   },
 });
