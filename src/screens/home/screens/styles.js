@@ -148,7 +148,7 @@ export const inputStyles = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end",
+    justifyContent: "center",
     minHeight: 64,
   },
 
@@ -158,7 +158,7 @@ export const inputStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 7,
     padding: 10,
-    width: "75%",
+    width: "80%",
     backgroundColor: colors.inputColor,
   },
 

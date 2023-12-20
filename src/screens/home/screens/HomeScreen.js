@@ -4,20 +4,14 @@ import {
   Text,
   Image,
   Alert,
-  Modal,
   FlatList,
   TextInput,
-  Pressable,
-  Share,
-  SafeAreaView,
-  ScrollView,
-  TouchableOpacity,
-  RefreshControl,
-  Linking,
   Dimensions,
-  Button,
+  SafeAreaView,
+  RefreshControl,
+  TouchableOpacity,
 } from "react-native";
-import { globalStyles, itemStyles, inputStyles, modalStyles } from "./styles";
+import { globalStyles, itemStyles, inputStyles } from "./styles";
 
 import CustomTouchable from "../../../components/CustomTouchable";
 
@@ -26,8 +20,9 @@ import search from "../../../utils/img/search.png";
 import favorite from "../../../utils/img/favorite.png";
 
 import * as colors from "../../../theme/colors";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation, item }) => {
   const mockItemData = [
     {
       title: "Pizza Papperoni",
@@ -36,11 +31,9 @@ export const HomeScreen = () => {
       price: 120,
       image:
         "https://img.freepik.com/free-photo/top-view-pepperoni-pizza-with-mushroom-sausages-bell-pepper-olive-corn-black-wooden_141793-2158.jpg",
-      description: `Pepperoni pizza is an American pizza variety which includes one of
-    the country's most beloved toppings. Pepperoni is actually a
+      description: `Pepperoni pizza is an American pizza variety which includes one of the country's most beloved toppings. Pepperoni is actually a
     corrupted form of peperoni (one “p”), which denotes a large pepper
-    in Italian, but nowadays it denotes a spicy salami, usually made
-    with a mixture of beef, pork, and spices.`,
+    in Italian, but nowadays it denotes a spicy salami, usually made with a mixture of beef, pork, and spices.`,
     },
     {
       title: "Vegetarian Pizza",
@@ -125,29 +118,6 @@ export const HomeScreen = () => {
     },
   ];
 
-  const pizzaData = [
-    {
-      image:
-        "https://img.freepik.com/premium-vector/pizza-sale-flyer_124507-1644.jpg",
-    },
-    {
-      image:
-        "https://img.freepik.com/free-vector/pizza-time-isometric_1284-22330.jpg",
-    },
-    {
-      image:
-        "https://img.freepik.com/free-photo/beautiful-mexican-party-decoration-with-food_23-2149317348.jpg",
-    },
-    {
-      image:
-        "https://img.freepik.com/free-psd/delicious-burger-food-menu-instagram-facebook-story-template_120329-1645.jpg",
-    },
-    {
-      image:
-        "https://img.freepik.com/premium-vector/fast-food-street-snacks-restaurant-vector-menu_8071-22465.jpg",
-    },
-  ];
-
   const { width, height } = Dimensions.get("screen");
 
   const handleButtonPress = () => {
@@ -161,10 +131,6 @@ export const HomeScreen = () => {
   const [searchResults, setSearchResults] = useState(mockItemData);
   const [refreshing, setRefreshing] = useState(false);
   const [additionalData, setAdditionalData] = useState([]);
-
-  const toggleSearchVisibility = () => {
-    setSearchVisibility(!isSearchVisible);
-  };
 
   const handleTextChange = (inputText) => {
     onChangeText(inputText);
@@ -211,194 +177,102 @@ export const HomeScreen = () => {
     setAdditionalData((prevData) => [...prevData, ...newItems]);
   };
 
-  const renderItem = ({ item }) => (
-    <View style={itemStyles.item}>
-      <View style={itemStyles.photoContainer}>
-        <Image style={itemStyles.mainPicture} source={{ uri: item.image }} />
-        {item.isNew && (
-          <View style={itemStyles.itemNew}>
-            <Text style={itemStyles.textNew}>New</Text>
-          </View>
-        )}
-      </View>
+  // const navigation = useNavigation();
+  const [pizzaParam, setPizzaParam] = useState("");
+  const [modalParam, setModalParam] = useState("");
 
-      <View style={itemStyles.itemInfo}>
-        <View style={itemStyles.titleBlock}>
-          <Text style={itemStyles.titleText}>{item.title}</Text>
-          {item.favorite && (
-            <Image style={itemStyles.favorite} source={favorite} />
+  const navigateToPizza = (pizza) => {
+    navigation.navigate("Pizza", {
+      goBackCallBack: setPizzaParam,
+      pizza,
+    });
+  };
+
+  const navigateToModal = (modalImg) => {
+    navigation.navigate("Modal", {
+      goBackCallBack: setModalParam,
+      modalImg,
+    });
+  };
+
+  const isFocus = useIsFocused();
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => navigateToPizza(item)}>
+      <View style={itemStyles.item}>
+        <View style={itemStyles.photoContainer}>
+          <Image style={itemStyles.mainPicture} source={{ uri: item.image }} />
+          {item.isNew && (
+            <View style={itemStyles.itemNew}>
+              <Text style={itemStyles.textNew}>New</Text>
+            </View>
           )}
         </View>
 
-        <View style={itemStyles.priceInfo}>
-          <Text style={itemStyles.newPrice}>{item.price}</Text>
-          <Text style={itemStyles.oldPrice}>150</Text>
-        </View>
+        <View style={itemStyles.itemInfo}>
+          <View style={itemStyles.titleBlock}>
+            <Text style={itemStyles.titleText}>{item.title}</Text>
+            {item.favorite && (
+              <Image style={itemStyles.favorite} source={favorite} />
+            )}
+          </View>
 
-        <View style={itemStyles.about}>
-          <Text
-            numberOfLines={1}
-            ellipsizeMode="tail"
-            style={itemStyles.description}
-          >
-            {item.description}
-          </Text>
-          <View style={itemStyles.buttonContainer}>
-            <CustomTouchable
-              onPress={() => handleButtonPress()}
-              style={itemStyles.buyButton}
+          <View style={itemStyles.priceInfo}>
+            <Text style={itemStyles.newPrice}>{item.price}</Text>
+            <Text style={itemStyles.oldPrice}>150</Text>
+          </View>
+
+          <View style={itemStyles.about}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={itemStyles.description}
             >
-              <Text style={itemStyles.buyButtonText}>Buy</Text>
-            </CustomTouchable>
-            <CustomTouchable
-              onPress={() => handleButtonPress()}
-              style={itemStyles.cartButton}
-            >
-              <Image source={cart} style={itemStyles.cartIcon} />
-            </CustomTouchable>
+              {item.description}
+            </Text>
+            <View style={itemStyles.buttonContainer}>
+              <CustomTouchable
+                onPress={() => handleButtonPress()}
+                style={itemStyles.buyButton}
+              >
+                <Text style={itemStyles.buyButtonText}>Buy</Text>
+              </CustomTouchable>
+              <CustomTouchable
+                onPress={() => handleButtonPress()}
+                style={itemStyles.cartButton}
+              >
+                <Image source={cart} style={itemStyles.cartIcon} />
+              </CustomTouchable>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
-
-  const handleShare = (item) => {
-    const imageUrl = item.image;
-
-    Linking.openURL(`mailto:https://www.pizzaday.com.ua/address}`);
-  };
-
-  const renderSwiper = ({ item }) => {
-    return (
-      <TouchableOpacity onPress={() => handleShare(item)}>
-        <View style={{ width: width }}>
-          <Image
-            source={{ uri: item.image }}
-            style={{
-              width: 400,
-              minHeight: 500,
-              maxHeight: 600,
-              resizeMode: "cover",
-              marginBottom: 70,
-            }}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  };
 
   return (
     <SafeAreaView style={globalStyles.container}>
       <View style={inputStyles.inputWrapper}>
-        {isSearchVisible && (
-          <TextInput
-            style={inputStyles.input}
-            onChangeText={handleTextChange}
-            value={text}
-            placeholder="Search..."
-            keyboardType="default"
-            keyboardAppearance="default"
-            placeholderTextColor={colors.red}
-          />
-        )}
+        <TextInput
+          style={inputStyles.input}
+          onChangeText={handleTextChange}
+          value={text}
+          placeholder="Search..."
+          keyboardType="default"
+          keyboardAppearance="default"
+          placeholderTextColor={colors.red}
+        />
+
         <View style={inputStyles.iconsWrapper}>
-          <CustomTouchable onPress={() => setModalVisible(true)}>
+          <CustomTouchable onPress={() => navigateToModal(item)}>
             <Image source={favorite} style={inputStyles.favorite}></Image>
           </CustomTouchable>
 
-          <CustomTouchable onPress={toggleSearchVisibility}>
+          <CustomTouchable>
             <Image source={search} style={inputStyles.search}></Image>
           </CustomTouchable>
         </View>
       </View>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <SafeAreaView style={modalStyles.centeredView}>
-          <Text style={modalStyles.modalText}>Sale</Text>
-          <FlatList
-            data={pizzaData}
-            renderItem={({ item, index }) => (
-              <View key={index} style={{ width, height }}>
-                <Image
-                  source={{ uri: item.image }}
-                  style={{
-                    width: width * 0.8,
-                    height: height * 0.6,
-                    resizeMode: "contain",
-                    alignSelf: "center",
-                  }}
-                />
-              </View>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onMomentumScrollEnd={(event) => {
-              const index = Math.floor(
-                event.nativeEvent.contentOffset.x / width
-              );
-              setCurrentIndex(index);
-            }}
-            onLayout={() => {
-              setTimeout(() => {
-                const newIndex = (currentIndex + 1) % pizzaData.length;
-                setCurrentIndex(newIndex);
-                flatListRef?.scrollToIndex({ animated: true, index: newIndex });
-              }, 5000);
-            }}
-            ref={(ref) => {
-              flatListRef = ref;
-            }}
-            onPress={handleShare}
-          />
-          <FlatList
-            data={pizzaData}
-            horizontal
-            showsHorizontalScrollIndicator={true}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => (
-              <View
-                style={[
-                  modalStyles.indicator,
-                  {
-                    backgroundColor:
-                      index === currentIndex ? colors.blue : colors.grey,
-                  },
-                ]}
-              />
-            )}
-          />
-          <View style={modalStyles.buttonContainer}>
-            <Pressable
-              style={[modalStyles.button, modalStyles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={modalStyles.textStyle}>Hide Modal</Text>
-            </Pressable>
-            <Pressable
-              style={[modalStyles.button, modalStyles.buttonShare]}
-              onPress={() =>
-                renderSwiper({ item: { image: pizzaData[currentIndex].image } })
-              }
-            >
-              <Button
-                title="Share"
-                style={modalStyles.textStyle}
-                onPress={handleShare}
-              ></Button>
-            </Pressable>
-          </View>
-        </SafeAreaView>
-      </Modal>
 
       <FlatList
         data={[...searchResults, ...additionalData]}
@@ -413,54 +287,3 @@ export const HomeScreen = () => {
     </SafeAreaView>
   );
 };
-
-{
-  /* <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <SafeAreaView style={modalStyles.centeredView}>
-          <View style={modalStyles.modalView}>
-            <FlatList
-              data={pizzaData}
-              renderItem={renderSwiper}
-              keyExtractor={(item, index) => index.toString()}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              onMomentumScrollEnd={(event) => {
-                const index = Math.floor(
-                  event.nativeEvent.contentOffset.x / width
-                );
-                setCurrentIndex(index);
-              }}
-            />
-            <Pressable
-              style={[modalStyles.button, modalStyles.buttonClose]}
-              onPress={() => setModalVisible(!modalVisible)}
-            >
-              <Text style={modalStyles.textStyle}>Hide Modal</Text>
-            </Pressable>
-            <View style={modalStyles.circleIndicatorContainer}>
-              {pizzaData.map((_, index) => (
-                <View
-                  key={index}
-                  style={[
-                    modalStyles.circleIndicator,
-                    {
-                      backgroundColor:
-                        index === currentIndex ? colors.blue : colors.grey,
-                    },
-                  ]}
-                />
-              ))}
-            </View>
-          </View>
-        </SafeAreaView>
-      </Modal> */
-}
