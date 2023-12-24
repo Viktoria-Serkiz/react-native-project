@@ -225,6 +225,7 @@ export const modalStyles = StyleSheet.create({
     fontSize: 25,
     marginBottom: 15,
     textAlign: "center",
+    textTransform: "uppercase",
   },
 
   photoGalleryImage: {

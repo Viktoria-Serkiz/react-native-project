@@ -20,17 +20,16 @@ const HeaderLeft = () => {
 const HomeStack = () => {
   const HomeStack = createNativeStackNavigator();
 
+  const navigateToModal = (modalImg) => {
+    navigation.navigate("Modal", {
+      goBackCallBack: setModalParam,
+      modalImg,
+    });
+  };
+
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={
-          {
-            // headerRight: HeaderRight,
-          }
-        }
-      />
+      <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen
         options={{
           headerLeft: HeaderLeft,
@@ -44,8 +43,9 @@ const HomeStack = () => {
         component={ModalScreen}
         options={{
           presentation: "modal",
-          headerTitle: "Sale",
+          headerTitle: "",
           headerTransparent: true,
+          headerLeft: HeaderLeft,
         }}
       />
     </HomeStack.Navigator>

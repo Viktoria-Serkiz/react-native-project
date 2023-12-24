@@ -125,9 +125,6 @@ export const HomeScreen = ({ navigation, item }) => {
   };
 
   const [text, onChangeText] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isSearchVisible, setSearchVisibility] = useState(false);
   const [searchResults, setSearchResults] = useState(mockItemData);
   const [refreshing, setRefreshing] = useState(false);
   const [additionalData, setAdditionalData] = useState([]);

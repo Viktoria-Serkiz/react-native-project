@@ -3,8 +3,8 @@ import {
   Text,
   View,
   Image,
-  Modal,
   Button,
+  Linking,
   FlatList,
   Pressable,
   Dimensions,
@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { modalStyles } from "./styles";
+import * as colors from "../../../theme/colors";
 
 const pizzaData = [
   {
@@ -39,22 +40,12 @@ const pizzaData = [
 export const ModalScreen = ({ route }) => {
   const navigation = useNavigation();
 
-  const [modalVisible, setModalVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
 
   const { width, height } = Dimensions.get("screen");
 
-  // const { modalImg } = route.params;
-
-  const navigateBack = () => {
-    navigation.goBack();
-    // route.params.goBackCallBack("Test value");
-  };
-
-  const handleShare = (modalImg) => {
-    const imageUrl = item.image;
-
+  const handleShare = () => {
     Linking.openURL(`mailto:https://www.pizzaday.com.ua/address}`);
   };
 
@@ -78,91 +69,75 @@ export const ModalScreen = ({ route }) => {
   };
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
-        setModalVisible(!modalVisible);
-      }}
-    >
-      <SafeAreaView style={modalStyles.centeredView}>
-        <Text style={modalStyles.modalText}>Sale</Text>
-        <FlatList
-          data={pizzaData}
-          renderItem={({ item, index }) => (
-            <View key={index} style={{ width, height }}>
-              <Image
-                source={{ uri: item.image }}
-                
-                style={{
-                  width: width * 0.8,
-                  height: height * 0.6,
-                  resizeMode: "contain",
-                  alignSelf: "center",
-                }}
-              />
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={(event) => {
-            const index = Math.floor(event.nativeEvent.contentOffset.x / width);
-            setCurrentIndex(index);
-          }}
-          onLayout={() => {
-            setTimeout(() => {
-              const newIndex = (currentIndex + 1) % pizzaData.length;
-              setCurrentIndex(newIndex);
-              flatListRef?.scrollToIndex({ animated: true, index: newIndex });
-            }, 5000);
-          }}
-          ref={(ref) => {
-            flatListRef = ref;
-          }}
-          onPress={handleShare}
-        />
-        <FlatList
-          data={pizzaData}
-          horizontal
-          showsHorizontalScrollIndicator={true}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <View
-              style={[
-                modalStyles.indicator,
-                {
-                  backgroundColor:
-                    index === currentIndex ? colors.blue : colors.grey,
-                },
-              ]}
+    <SafeAreaView style={modalStyles.centeredView}>
+      <Text style={modalStyles.modalText}>Sale</Text>
+      <FlatList
+        data={pizzaData}
+        renderItem={({ item, index }) => (
+          <View key={index} style={{ width, height }}>
+            <Image
+              source={{ uri: item.image }}
+              style={{
+                width: width * 0.8,
+                height: height * 0.6,
+                resizeMode: "contain",
+                alignSelf: "center",
+              }}
             />
-          )}
-        />
-        <View style={modalStyles.buttonContainer}>
-          <Pressable
-            style={[modalStyles.button, modalStyles.buttonClose]}
-            onPress={() => setModalVisible(!modalVisible)}
-          >
-            <Text style={modalStyles.textStyle}>Hide Modal</Text>
-          </Pressable>
-          <Pressable
-            style={[modalStyles.button, modalStyles.buttonShare]}
-            onPress={() =>
-              renderSwiper({ item: { image: pizzaData[currentIndex].image } })
-            }
-          >
-            <Button
-              title="Share"
-              style={modalStyles.textStyle}
-              onPress={handleShare}
-            ></Button>
-          </Pressable>
-        </View>
-      </SafeAreaView>
-    </Modal>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onMomentumScrollEnd={(event) => {
+          const index = Math.floor(event.nativeEvent.contentOffset.x / width);
+          setCurrentIndex(index);
+        }}
+        onLayout={() => {
+          setTimeout(() => {
+            const newIndex = (currentIndex + 1) % pizzaData.length;
+            setCurrentIndex(newIndex);
+            flatListRef.current?.scrollToIndex({
+              animated: true,
+              index: newIndex,
+            });
+          }, 5000);
+        }}
+        ref={flatListRef}
+        onPress={handleShare}
+      />
+      <FlatList
+        data={pizzaData}
+        horizontal
+        showsHorizontalScrollIndicator={true}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <View
+            style={[
+              modalStyles.indicator,
+              {
+                backgroundColor:
+                  index === currentIndex ? colors.blue : colors.grey,
+              },
+            ]}
+          />
+        )}
+      />
+      <View style={modalStyles.buttonContainer}>
+        <Pressable
+          style={[modalStyles.button, modalStyles.buttonShare]}
+          onPress={() =>
+            renderSwiper({ item: { image: pizzaData[currentIndex].image } })
+          }
+        >
+          <Button
+            title="Share"
+            style={modalStyles.textStyle}
+            onPress={handleShare}
+          ></Button>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 };
