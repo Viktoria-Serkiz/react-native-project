@@ -238,13 +238,15 @@ export const modalStyles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
   },
+
   indicator: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: colors.grey,
+    backgroundColor: colors.black,
     marginHorizontal: 5,
   },
+  
   activeIndicator: {
     backgroundColor: colors.blue,
   },

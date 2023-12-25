@@ -38,7 +38,7 @@ const pizzaData = [
 ];
 
 export const ModalScreen = ({ route }) => {
-  const navigation = useNavigation();
+  const { modalImg } = route.params;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
@@ -46,7 +46,11 @@ export const ModalScreen = ({ route }) => {
   const { width, height } = Dimensions.get("screen");
 
   const handleShare = () => {
-    Linking.openURL(`mailto:https://www.pizzaday.com.ua/address}`);
+    Linking.openURL(`https://www.pizzaday.com.ua/address`);
+  };
+
+  const handlePhoneNumber = (phoneNumber) => {
+    Linking.openURL(`tel:${phoneNumber}`);
   };
 
   const renderSwiper = ({ item }) => {
@@ -68,23 +72,32 @@ export const ModalScreen = ({ route }) => {
     );
   };
 
+  const handleIndicatorPress = (index) => {
+    flatListRef.current?.scrollToIndex({ animated: true, index });
+  };
+
   return (
     <SafeAreaView style={modalStyles.centeredView}>
       <Text style={modalStyles.modalText}>Sale</Text>
       <FlatList
         data={pizzaData}
         renderItem={({ item, index }) => (
-          <View key={index} style={{ width, height }}>
-            <Image
-              source={{ uri: item.image }}
-              style={{
-                width: width * 0.8,
-                height: height * 0.6,
-                resizeMode: "contain",
-                alignSelf: "center",
-              }}
-            />
-          </View>
+          <Pressable
+            onPress={() => handleShare(item)}
+            style={{ width, height }}
+          >
+            <View key={index} style={{ width, height }}>
+              <Image
+                source={{ uri: item.image }}
+                style={{
+                  width: width * 0.8,
+                  height: height * 0.6,
+                  resizeMode: "contain",
+                  alignSelf: "center",
+                }}
+              />
+            </View>
+          </Pressable>
         )}
         keyExtractor={(item, index) => index.toString()}
         horizontal
@@ -107,13 +120,10 @@ export const ModalScreen = ({ route }) => {
         ref={flatListRef}
         onPress={handleShare}
       />
-      <FlatList
-        data={pizzaData}
-        horizontal
-        showsHorizontalScrollIndicator={true}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => (
-          <View
+      <View style={modalStyles.indicatorContainer}>
+        {pizzaData.map((item, index) => (
+          <Pressable
+            key={index}
             style={[
               modalStyles.indicator,
               {
@@ -121,20 +131,19 @@ export const ModalScreen = ({ route }) => {
                   index === currentIndex ? colors.blue : colors.grey,
               },
             ]}
+            onPress={() => handleIndicatorPress(index)}
           />
-        )}
-      />
+        ))}
+      </View>
       <View style={modalStyles.buttonContainer}>
         <Pressable
           style={[modalStyles.button, modalStyles.buttonShare]}
-          onPress={() =>
-            renderSwiper({ item: { image: pizzaData[currentIndex].image } })
-          }
+          onPress={() => handleIndicatorPress(currentIndex + 1)}
         >
           <Button
             title="Share"
             style={modalStyles.textStyle}
-            onPress={handleShare}
+            onPress={handlePhoneNumber}
           ></Button>
         </Pressable>
       </View>

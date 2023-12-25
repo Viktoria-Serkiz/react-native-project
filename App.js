@@ -1,95 +1,35 @@
-import { HomeScreen } from "./src/screens/home/screens/HomeScreen";
-import { SettingsScreen } from "./src/screens/home/screens/SettingsScreen";
-import { PizzaScreen } from "./src/screens/home/screens/PizzaScreen";
-import { Text } from "react-native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import CustomTabBarIcon from "./src/components/CustomTabBarIcon";
-
-import { ModalScreen } from "./src/screens/home/screens/ModalScreen";
+import React, { useState, createContext } from "react";
+import { Text, Image } from "react-native";
+import { Navigator } from "./src/navigation";
+import useAppState from "./src/common/hooks/useAppState";
+import pizzaBackground from "./src/utils/img/pizza-bg.jpg";
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
 
-const HeaderLeft = () => {
-  const navigation = useNavigation();
-  return <Text onPress={() => navigation.goBack()}>BACK</Text>;
-};
+export const ThemeContext = createContext(null);
 
-const HomeStack = () => {
-  const HomeStack = createNativeStackNavigator();
-
-  const navigateToModal = (modalImg) => {
-    navigation.navigate("Modal", {
-      goBackCallBack: setModalParam,
-      modalImg,
-    });
-  };
+const App = () => {
+  const [theme, setTheme] = useState("dark");
+  const appState = useAppState();
 
   return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen
-        options={{
-          headerLeft: HeaderLeft,
-          presentation: "containedModal",
-        }}
-        name="Pizza"
-        component={PizzaScreen}
-      />
-      <HomeStack.Screen
-        name="Modal"
-        component={ModalScreen}
-        options={{
-          presentation: "modal",
-          headerTitle: "",
-          headerTransparent: true,
-          headerLeft: HeaderLeft,
-        }}
-      />
-    </HomeStack.Navigator>
+    <>
+      {appState !== "active" && (
+        <Image
+          source={pizzaBackground}
+          style={{
+            resizeMode: "cover",
+            width: "100%",
+            height: "100%",
+          }}
+        />
+      )}
+      <ThemeContext.Provider value={{ color: theme }}>
+        <Navigator />
+      </ThemeContext.Provider>
+    </>
   );
 };
 
-const MyTabs = () => {
-  const BottomTab = createBottomTabNavigator();
-  return (
-    <BottomTab.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-      tabBarOptions={{
-        activeTintColor: "blue",
-        inactiveTintColor: "black",
-      }}
-    >
-      <BottomTab.Screen
-        name="HomeTab"
-        component={HomeStack}
-        options={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => (
-            <CustomTabBarIcon iconName="home" focused={!focused} />
-          ),
-        })}
-      />
-      <BottomTab.Screen
-        name="Settings"
-        component={SettingsScreen}
-        options={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => (
-            <CustomTabBarIcon iconName="settings" focused={!focused} />
-          ),
-        })}
-      />
-    </BottomTab.Navigator>
-  );
-};
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <MyTabs />
-    </NavigationContainer>
-  );
-}
+export default App;

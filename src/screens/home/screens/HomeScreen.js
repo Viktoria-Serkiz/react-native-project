@@ -11,20 +11,22 @@ import {
   RefreshControl,
   TouchableOpacity,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
+
 import { globalStyles, itemStyles, inputStyles } from "./styles";
 
-import CustomTouchable from "../../../components/CustomTouchable";
+import CustomTouchable from "../../../common/components/CustomTouchable";
 
 import cart from "../../../utils/img/cart.png";
 import search from "../../../utils/img/search.png";
 import favorite from "../../../utils/img/favorite.png";
 
 import * as colors from "../../../theme/colors";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 export const HomeScreen = ({ navigation, item }) => {
   const mockItemData = [
     {
+      id: "1",
       title: "Pizza Papperoni",
       isNew: true,
       favorite: true,
@@ -36,6 +38,7 @@ export const HomeScreen = ({ navigation, item }) => {
     in Italian, but nowadays it denotes a spicy salami, usually made with a mixture of beef, pork, and spices.`,
     },
     {
+      id: "2",
       title: "Vegetarian Pizza",
       isNew: false,
       favorite: false,
@@ -45,6 +48,7 @@ export const HomeScreen = ({ navigation, item }) => {
       description: `Vegetarian pizza with a variety of fresh vegetables and herbs. A delightful and healthy option for pizza lovers.`,
     },
     {
+      id: "3",
       title: "Margherita Pizza",
       isNew: true,
       favorite: true,
@@ -54,6 +58,7 @@ export const HomeScreen = ({ navigation, item }) => {
       description: `Margherita pizza with classic ingredients like tomatoes, fresh mozzarella, and basil. A timeless favorite.`,
     },
     {
+      id: "4",
       title: "Hawaiian Pizza",
       isNew: false,
       favorite: true,
@@ -63,6 +68,7 @@ export const HomeScreen = ({ navigation, item }) => {
       description: `Hawaiian pizza with a tropical twist, featuring pineapple and ham as key toppings.`,
     },
     {
+      id: "5",
       title: "BBQ Chicken Pizza",
       isNew: true,
       favorite: false,
@@ -72,6 +78,7 @@ export const HomeScreen = ({ navigation, item }) => {
       description: `BBQ chicken pizza with succulent chicken pieces and a drizzle of barbecue sauce.`,
     },
     {
+      id: "6",
       title: "Supreme Pizza",
       isNew: false,
       favorite: true,
@@ -81,6 +88,7 @@ export const HomeScreen = ({ navigation, item }) => {
       description: `Supreme pizza loaded with a variety of toppings, including sausage, olives, bell peppers, and more.`,
     },
     {
+      id: "7",
       title: "Mushroom Lovers Pizza",
       isNew: true,
       favorite: false,
@@ -90,6 +98,7 @@ export const HomeScreen = ({ navigation, item }) => {
       description: `Pizza for mushroom lovers, featuring a generous amount of assorted mushrooms.`,
     },
     {
+      id: "8",
       title: "Four Cheese Pizza",
       isNew: false,
       favorite: true,
@@ -99,6 +108,7 @@ export const HomeScreen = ({ navigation, item }) => {
       description: `Four cheese pizza with a rich blend of mozzarella, cheddar, parmesan, and gorgonzola.`,
     },
     {
+      id: "9",
       title: "Pepper and Onion Pizza",
       isNew: true,
       favorite: false,
@@ -108,6 +118,7 @@ export const HomeScreen = ({ navigation, item }) => {
       description: `Pizza topped with a flavorful combination of peppers and onions.`,
     },
     {
+      id: "10",
       title: "Buffalo Chicken Pizza",
       isNew: false,
       favorite: true,
@@ -174,7 +185,6 @@ export const HomeScreen = ({ navigation, item }) => {
     setAdditionalData((prevData) => [...prevData, ...newItems]);
   };
 
-  // const navigation = useNavigation();
   const [pizzaParam, setPizzaParam] = useState("");
   const [modalParam, setModalParam] = useState("");
 
@@ -194,57 +204,63 @@ export const HomeScreen = ({ navigation, item }) => {
 
   const isFocus = useIsFocused();
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => navigateToPizza(item)}>
-      <View style={itemStyles.item}>
-        <View style={itemStyles.photoContainer}>
-          <Image style={itemStyles.mainPicture} source={{ uri: item.image }} />
-          {item.isNew && (
-            <View style={itemStyles.itemNew}>
-              <Text style={itemStyles.textNew}>New</Text>
-            </View>
-          )}
-        </View>
-
-        <View style={itemStyles.itemInfo}>
-          <View style={itemStyles.titleBlock}>
-            <Text style={itemStyles.titleText}>{item.title}</Text>
-            {item.favorite && (
-              <Image style={itemStyles.favorite} source={favorite} />
+  const renderItem = useCallback(
+    ({ item }) => (
+      <TouchableOpacity onPress={() => navigateToPizza(item)}>
+        <View style={itemStyles.item}>
+          <View style={itemStyles.photoContainer}>
+            <Image
+              style={itemStyles.mainPicture}
+              source={{ uri: item.image }}
+            />
+            {item.isNew && (
+              <View style={itemStyles.itemNew}>
+                <Text style={itemStyles.textNew}>New</Text>
+              </View>
             )}
           </View>
 
-          <View style={itemStyles.priceInfo}>
-            <Text style={itemStyles.newPrice}>{item.price}</Text>
-            <Text style={itemStyles.oldPrice}>150</Text>
-          </View>
+          <View style={itemStyles.itemInfo}>
+            <View style={itemStyles.titleBlock}>
+              <Text style={itemStyles.titleText}>{item.title}</Text>
+              {item.favorite && (
+                <Image style={itemStyles.favorite} source={favorite} />
+              )}
+            </View>
 
-          <View style={itemStyles.about}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={itemStyles.description}
-            >
-              {item.description}
-            </Text>
-            <View style={itemStyles.buttonContainer}>
-              <CustomTouchable
-                onPress={() => handleButtonPress()}
-                style={itemStyles.buyButton}
+            <View style={itemStyles.priceInfo}>
+              <Text style={itemStyles.newPrice}>{item.price}</Text>
+              <Text style={itemStyles.oldPrice}>150</Text>
+            </View>
+
+            <View style={itemStyles.about}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={itemStyles.description}
               >
-                <Text style={itemStyles.buyButtonText}>Buy</Text>
-              </CustomTouchable>
-              <CustomTouchable
-                onPress={() => handleButtonPress()}
-                style={itemStyles.cartButton}
-              >
-                <Image source={cart} style={itemStyles.cartIcon} />
-              </CustomTouchable>
+                {item.description}
+              </Text>
+              <View style={itemStyles.buttonContainer}>
+                <CustomTouchable
+                  onPress={() => handleButtonPress()}
+                  style={itemStyles.buyButton}
+                >
+                  <Text style={itemStyles.buyButtonText}>Buy</Text>
+                </CustomTouchable>
+                <CustomTouchable
+                  onPress={() => handleButtonPress()}
+                  style={itemStyles.cartButton}
+                >
+                  <Image source={cart} style={itemStyles.cartIcon} />
+                </CustomTouchable>
+              </View>
             </View>
           </View>
         </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    ),
+    [text]
   );
 
   return (
@@ -273,7 +289,7 @@ export const HomeScreen = ({ navigation, item }) => {
 
       <FlatList
         data={[...searchResults, ...additionalData]}
-        keyExtractor={(item) => item.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
