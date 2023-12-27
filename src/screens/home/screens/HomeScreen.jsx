@@ -12,10 +12,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
+import { observer } from "mobx-react";
 
-import { globalStyles, itemStyles, inputStyles } from "./styles";
+import { ScreenContainer } from "../../../common/components/ScreenContainer";
+
+import { itemStyles, inputStyles } from "./styles";
 
 import CustomTouchable from "../../../common/components/CustomTouchable";
+
+import orderStore from "../store/Order";
 
 import cart from "../../../utils/img/cart.png";
 import search from "../../../utils/img/search.png";
@@ -202,6 +207,10 @@ export const HomeScreen = ({ navigation, item }) => {
     });
   };
 
+  const onItemBuy = () => {
+    orderStore.setOrders(item);
+  };
+
   const isFocus = useIsFocused();
 
   const renderItem = useCallback(
@@ -246,7 +255,12 @@ export const HomeScreen = ({ navigation, item }) => {
                   onPress={() => handleButtonPress()}
                   style={itemStyles.buyButton}
                 >
-                  <Text style={itemStyles.buyButtonText}>Buy</Text>
+                  <TouchableOpacity
+                    style={{ backgroundColor: "yellow" }}
+                    onPress={() => onItemBuy(item)}
+                  >
+                    <Text style={itemStyles.buyButtonText}>Buy</Text>
+                  </TouchableOpacity>
                 </CustomTouchable>
                 <CustomTouchable
                   onPress={() => handleButtonPress()}
@@ -264,7 +278,7 @@ export const HomeScreen = ({ navigation, item }) => {
   );
 
   return (
-    <SafeAreaView style={globalStyles.container}>
+    <ScreenContainer>
       <View style={inputStyles.inputWrapper}>
         <TextInput
           style={inputStyles.input}
@@ -297,6 +311,6 @@ export const HomeScreen = ({ navigation, item }) => {
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.1}
       />
-    </SafeAreaView>
+    </ScreenContainer>
   );
 };

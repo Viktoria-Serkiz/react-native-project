@@ -3,10 +3,10 @@ import { StyleSheet } from "react-native";
 import * as colors from "../../../theme/colors";
 
 export const globalStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.backgroundColor,
-  },
+  // container: {
+  //   flex: 1,
+  //   backgroundColor: colors.backgroundColor,
+  // },
 
   scrollView: {
     flex: 1,

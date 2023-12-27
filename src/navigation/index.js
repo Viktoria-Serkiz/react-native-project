@@ -1,14 +1,20 @@
-import { Text } from "react-native";
+import { Text, Image, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
-
-import CustomTabBarIcon from "../common/components/CustomTabBarIcon";
+import { observer } from "mobx-react";
 
 import { HomeScreen } from "../screens/home/screens/HomeScreen";
 import { PizzaScreen } from "../screens/home/screens/PizzaScreen";
 import { ModalScreen } from "../screens/home/screens/ModalScreen";
+import { BasketScreen } from "../screens/home/screens/BasketScreen";
 import { SettingsScreen } from "../screens/home/screens/SettingsScreen";
+
+import settingsIcon from "../utils/img/settings-icon.png";
+import homeIcon from "../utils/img/home-icon.png";
+import basketIcon from "../utils/img/shopping-cart.png";
+
+import orderStore from "../screens/home/store/Order";
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
@@ -53,7 +59,45 @@ const HomeStack = () => {
           headerLeft: HeaderLeft,
         }}
       />
+      <HomeStack.Screen
+        options={{
+          headerLeft: HeaderLeft,
+        }}
+        name="Backet"
+        component={BasketScreen}
+      />
     </HomeStack.Navigator>
+  );
+};
+
+const TabBarIcon = () => {
+  return <Image style={{ width: 28, height: 28 }} source={homeIcon}></Image>;
+};
+
+const TabBarIconBasket = observer((prop) => {
+  return (
+    <View>
+      <View
+        style={{
+          borderRadius: 10,
+          overflow: "hidden",
+          backgroundColor: "blue",
+          position: "absolute",
+          zIndex: 1,
+          top: -10,
+          left: -5,
+        }}
+      >
+        <Text style={{ color: "white" }}>{orderStore.orders.length}</Text>
+      </View>
+      <Image style={{ width: 28, height: 28 }} source={basketIcon}></Image>
+    </View>
+  );
+});
+
+const TabBarIconSettings = () => {
+  return (
+    <Image style={{ width: 28, height: 28 }} source={settingsIcon}></Image>
   );
 };
 
@@ -68,6 +112,7 @@ const MyTabs = () => {
         tabBarStyle: [
           {
             display: "flex",
+            paddingBottom: 15,
           },
           null,
         ],
@@ -76,20 +121,25 @@ const MyTabs = () => {
       <BottomTab.Screen
         name="HomeTab"
         component={HomeStack}
-        options={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => (
-            <CustomTabBarIcon iconName="home" focused={!focused} />
-          ),
-        })}
+        options={{
+          tabBarIcon: TabBarIcon,
+        }}
+      />
+      <BottomTab.Screen
+        name="Basket"
+        component={BasketScreen}
+        options={{
+          tabBarIcon: function Icon() {
+            return <TabBarIconBasket />;
+          },
+        }}
       />
       <BottomTab.Screen
         name="Settings"
         component={SettingsScreen}
-        options={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => (
-            <CustomTabBarIcon iconName="settings" focused={!focused} />
-          ),
-        })}
+        options={{
+          tabBarIcon: TabBarIconSettings,
+        }}
       />
     </BottomTab.Navigator>
   );

@@ -1,16 +1,13 @@
-import React, { useState, createContext } from "react";
 import { Text, Image } from "react-native";
 import { Navigator } from "./src/navigation";
 import useAppState from "./src/common/hooks/useAppState";
 import pizzaBackground from "./src/utils/img/pizza-bg.jpg";
+import { ThemeProvider } from "./src/common/theme/ThemeContext";
 
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
 
-export const ThemeContext = createContext(null);
-
 const App = () => {
-  const [theme, setTheme] = useState("dark");
   const appState = useAppState();
 
   return (
@@ -25,9 +22,9 @@ const App = () => {
           }}
         />
       )}
-      <ThemeContext.Provider value={{ color: theme }}>
+      <ThemeProvider>
         <Navigator />
-      </ThemeContext.Provider>
+      </ThemeProvider>
     </>
   );
 };
