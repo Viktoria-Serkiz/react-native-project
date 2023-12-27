@@ -63,7 +63,7 @@ const HomeStack = () => {
         options={{
           headerLeft: HeaderLeft,
         }}
-        name="Backet"
+        name="Basket"
         component={BasketScreen}
       />
     </HomeStack.Navigator>

@@ -1,24 +1,66 @@
-import { SafeAreaView, TouchableOpacity, Text } from "react-native";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import React from "react";
+import { SafeAreaView, TouchableOpacity, Text, FlatList } from "react-native";
+import { observer } from "mobx-react";
 import orderStore from "../store/Order";
 
-export const BasketScreen = () => {
-  const navigation = useNavigation();
-  const route = useRoute();
-
+export const BasketScreen = observer(() => {
   const navigateBack = () => {
     navigation.goBack();
+  };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => orderStore.removeOrder(item)}>
+      <Text>{item.title}</Text>
+      <Text>{`Price: ${item.price}`}</Text>
+      <Text>Remove</Text>
+    </TouchableOpacity>
+  );
+
+  const confirmOrder = () => {
+    orderStore.confirmOrder();
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <TouchableOpacity onPress={navigateBack}>
         <Text>Basket Screen</Text>
-        <Text>{`In your shopping cart ${orderStore.orders.length}`}</Text>
+        <Text>{`In your shopping cart ${orderStore.orders.length} items`}</Text>
+      </TouchableOpacity>
+
+      <FlatList
+        data={orderStore.orders}
+        keyExtractor={(item, index) => index + ""}
+        renderItem={renderItem}
+      />
+
+      <TouchableOpacity onPress={confirmOrder}>
+        <Text>Confirm Order</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
-};
+});
+
+// import { SafeAreaView, TouchableOpacity, Text } from "react-native";
+// import { useNavigation, useRoute } from "@react-navigation/native";
+// import orderStore from "../store/Order";
+
+// export const BasketScreen = () => {
+//   const navigation = useNavigation();
+//   const route = useRoute();
+
+//   const navigateBack = () => {
+//     navigation.goBack();
+//   };
+
+//   return (
+//     <SafeAreaView style={{ flex: 1 }}>
+//       <TouchableOpacity onPress={navigateBack}>
+//         <Text>Basket Screen</Text>
+//         <Text>{`In your shopping cart ${orderStore.orders.length}`}</Text>
+//       </TouchableOpacity>
+//     </SafeAreaView>
+//   );
+// };
 
 // import React from "react";
 // import {
@@ -101,3 +143,5 @@ export const BasketScreen = () => {
 //     </SafeAreaView>
 //   );
 // };
+
+// BasketScreen.js
