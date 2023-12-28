@@ -3,11 +3,6 @@ import { StyleSheet } from "react-native";
 import * as colors from "../../../theme/colors";
 
 export const globalStyles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: colors.backgroundColor,
-  // },
-
   scrollView: {
     flex: 1,
     backgroundColor: "pink",
@@ -246,7 +241,7 @@ export const modalStyles = StyleSheet.create({
     backgroundColor: colors.black,
     marginHorizontal: 5,
   },
-  
+
   activeIndicator: {
     backgroundColor: colors.blue,
   },
