@@ -64,6 +64,15 @@ class OrderStore {
     } else {
       this.orders.push({ ...orderItem, quantity: 1 });
     }
+
+    this.updateTotalQuantity();
+  }
+
+  @action updateTotalQuantity() {
+    this.totalQuantity = this.orders.reduce(
+      (total, item) => total + item.quantity,
+      0
+    );
   }
 
   @action setInput(value) {
@@ -86,6 +95,8 @@ class OrderStore {
         this.orders = this.orders.filter((item) => item.id !== orderItem.id);
       }
     }
+
+    this.updateTotalQuantity();
   }
 
   @action confirmOrder() {
@@ -93,13 +104,15 @@ class OrderStore {
   }
 
   @computed get calculateTotal() {
-    return this.orders.reduce((total, item) => total + item.price * item.quantity, 0);
+    return this.orders.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   }
 
   @computed get calculateTotalQuantity() {
     return this.orders.reduce((total, item) => total + item.quantity, 0);
   }
-  
 }
 
 export default new OrderStore();

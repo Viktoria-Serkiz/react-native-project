@@ -134,6 +134,7 @@ export const basketStyle = StyleSheet.create({
 
   plusMinus: {
     fontWeight: "bold",
+    fontSize: 20,
   },
 
   quantityText: {
