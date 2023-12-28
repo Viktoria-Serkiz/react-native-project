@@ -40,6 +40,7 @@ export const BasketScreen = observer(({ navigation }) => {
         keyExtractor={(item, index) => index + ""}
         renderItem={renderItem}
       />
+       <Text>{`Total: ${orderStore.calculateTotal}`}</Text>
 
       <TouchableOpacity
         onPress={confirmOrder}

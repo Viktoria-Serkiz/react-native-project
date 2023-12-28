@@ -93,7 +93,7 @@ export const HomeScreen = ({ navigation, item }) => {
     });
   };
 
-  const onItemBuy = () => {
+  const onItemBuy = (item) => {
     orderStore.setOrders(item);
   };
 
