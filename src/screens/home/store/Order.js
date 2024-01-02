@@ -99,6 +99,16 @@ class OrderStore {
     this.updateTotalQuantity();
   }
 
+  @action removeItemsInOrder(orderItem) {
+    const indexToRemove = this.orders.findIndex(
+      (item) => item.id === orderItem.id
+    );
+
+    if (indexToRemove !== -1) {
+      this.orders.splice(indexToRemove, 1);
+    }
+  }
+
   @action confirmOrder() {
     this.orders = [];
   }

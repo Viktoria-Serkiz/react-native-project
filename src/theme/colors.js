@@ -10,4 +10,6 @@ export const specialText = "#474448";
 
 export const inputColor = "#A39BA8";
 export const overlay = "rgba(128, 128, 128, 0.5)";
+
 export const closeButtonInModal = "#2196F3";
+export const blue = "blue";

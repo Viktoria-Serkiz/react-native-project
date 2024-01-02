@@ -88,9 +88,11 @@ const TabBarIconBasket = observer((prop) => {
           left: -5,
         }}
       >
-        <Text style={{ color: "white" }}>
-          {orderStore.calculateTotalQuantity}
-        </Text>
+        {orderStore.orders.length > 0 && (
+          <Text style={{ color: "white" }}>
+            {orderStore.calculateTotalQuantity}
+          </Text>
+        )}
       </View>
       <Image style={{ width: 28, height: 28 }} source={basketIcon}></Image>
     </View>

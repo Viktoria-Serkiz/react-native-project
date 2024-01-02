@@ -1,16 +1,17 @@
 import React from "react";
 import {
-  SafeAreaView,
-  TouchableOpacity,
   Text,
-  FlatList,
-  StyleSheet,
   View,
   Image,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
 import { observer } from "mobx-react";
 import orderStore from "../store/Order";
-import * as colors from "../../../theme/colors";
+
+import { basketStyle } from "./styles";
+import emptyBasket from "../../../utils/img/empty-cart.png";
 
 export const BasketScreen = observer(({ navigation }) => {
   const navigateBack = () => {
@@ -18,7 +19,7 @@ export const BasketScreen = observer(({ navigation }) => {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => orderStore.removeOrder(item)}>
+    <View>
       {item && item.title && (
         <View style={basketStyle.items}>
           <View>
@@ -51,9 +52,15 @@ export const BasketScreen = observer(({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
+          <TouchableOpacity
+            onPress={() => orderStore.removeItemsInOrder(item)}
+            style={basketStyle.deleteOrderButton}
+          >
+            <Text>Delete</Text>
+          </TouchableOpacity>
         </View>
       )}
-    </TouchableOpacity>
+    </View>
   );
 
   const confirmOrder = () => {
@@ -68,10 +75,20 @@ export const BasketScreen = observer(({ navigation }) => {
         <Text style={{ fontSize: 15, marginBottom: 10 }}>Basket Screen</Text>
       </TouchableOpacity>
 
-      <Text
-        style={basketStyle.mainText}
-      >{`In your shopping cart ${orderStore.calculateTotalQuantity} items`}</Text>
+      <View style={{ alignItems: "center" }}>
+        <Text
+          style={basketStyle.mainText}
+        >{`In your shopping cart ${orderStore.calculateTotalQuantity} items`}</Text>
 
+        {orderStore.orders.length === 0 && (
+          <View style={{ paddingTop: 200, alignItems: "center" }}>
+            <Image source={emptyBasket} style={{ width: 100, height: 100 }} />
+            <TouchableOpacity onPress={navigateBack}>
+              <Text style={basketStyle.backToShopping}>Back to shopping</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
       <FlatList
         data={orderStore.orders}
         keyExtractor={(item, index) => index + ""}
@@ -91,66 +108,4 @@ export const BasketScreen = observer(({ navigation }) => {
       </TouchableOpacity>
     </SafeAreaView>
   );
-});
-
-export const basketStyle = StyleSheet.create({
-  mainText: {
-    textAlign: "center",
-    fontSize: 20,
-  },
-
-  items: {
-    width: "100%",
-    borderColor: colors.borderForItem,
-    borderBottomWidth: 1,
-    minHeight: 80,
-    marginTop: 10,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  image: {
-    width: 50,
-    height: 50,
-    margin: 10,
-    borderRadius: 10,
-  },
-
-  wrapperForTitle: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-   
-  },
-
-  orderTitle: {
-    marginRight: 40,
-    width:"45%"
-  },
-
-  quantityWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  plusMinus: {
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-
-  quantityText: {
-    fontSize: 20,
-    marginHorizontal: 10,
-  },
-
-  totalText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginLeft: 10,
-  },
-
-  confirmButton: {
-    backgroundColor: "blue",
-    padding: 10,
-    marginTop: 20,
-  },
 });

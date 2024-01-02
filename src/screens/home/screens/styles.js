@@ -246,3 +246,79 @@ export const modalStyles = StyleSheet.create({
     backgroundColor: colors.blue,
   },
 });
+
+export const basketStyle = StyleSheet.create({
+  mainText: {
+    textAlign: "center",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+
+  items: {
+    width: "100%",
+    borderColor: colors.borderForItem,
+    borderBottomWidth: 1,
+    minHeight: 80,
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  image: {
+    width: 50,
+    height: 50,
+    margin: 10,
+    borderRadius: 10,
+  },
+
+  wrapperForTitle: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+  },
+
+  orderTitle: {
+    marginRight: 40,
+    width: "45%",
+  },
+
+  quantityWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+
+  plusMinus: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+
+  quantityText: {
+    fontSize: 20,
+    marginHorizontal: 10,
+  },
+
+  totalText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+
+  backToShopping: {
+    color: colors.borderForItem,
+    fontSize: 15,
+    marginTop: 20,
+  },
+
+  confirmButton: {
+    backgroundColor: colors.blue,
+    padding: 10,
+    marginTop: 20,
+  },
+
+  deleteOrderButton: {
+    borderColor: colors.blue,
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 2,
+    backgroundColor: colors.backgroundForItem,
+  },
+});
