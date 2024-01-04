@@ -143,17 +143,18 @@ export const inputStyles = StyleSheet.create({
   inputWrapper: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    minHeight: 64,
+    justifyContent: "flex-end",
+    // minHeight: 64,
+    marginLeft: 10,
   },
 
   input: {
     height: 40,
-    margin: 12,
+    marginRight: 35,
     borderWidth: 1,
     borderRadius: 7,
     padding: 10,
-    width: "80%",
+    minWidth: "70%",
     backgroundColor: colors.inputColor,
   },
 
@@ -162,7 +163,6 @@ export const inputStyles = StyleSheet.create({
     alignItems: "center,",
     justifyContent: "space-between",
     marginRight: 20,
-    marginBottom: 10,
   },
 
   favorite: {
@@ -231,15 +231,13 @@ export const modalStyles = StyleSheet.create({
   indicatorsContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 10,
   },
 
   indicator: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: colors.black,
-    marginHorizontal: 5,
+    marginRight: 5,
   },
 
   activeIndicator: {

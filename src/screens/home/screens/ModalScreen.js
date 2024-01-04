@@ -120,7 +120,7 @@ export const ModalScreen = ({ route }) => {
         ref={flatListRef}
         onPress={handleShare}
       />
-      <View style={modalStyles.indicatorContainer}>
+      <View style={modalStyles.indicatorsContainer}>
         {pizzaData.map((item, index) => (
           <Pressable
             key={index}
@@ -128,8 +128,8 @@ export const ModalScreen = ({ route }) => {
               modalStyles.indicator,
               {
                 backgroundColor:
-                  index === currentIndex ? colors.blue : colors.grey,
-              },
+                  index === currentIndex ? colors.blue : colors.white,
+              }, 
             ]}
             onPress={() => handleIndicatorPress(index)}
           />

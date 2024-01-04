@@ -40,7 +40,14 @@ const HomeStack = () => {
 
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
+      <HomeStack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerTransparent: true,
+          headerTitle: "",
+        }}
+      />
       <HomeStack.Screen
         options={{
           headerLeft: HeaderLeft,
@@ -60,11 +67,11 @@ const HomeStack = () => {
         }}
       />
       <HomeStack.Screen
+        name="Basket"
+        component={BasketScreen}
         options={{
           headerLeft: HeaderLeft,
         }}
-        name="Basket"
-        component={BasketScreen}
       />
     </HomeStack.Navigator>
   );
