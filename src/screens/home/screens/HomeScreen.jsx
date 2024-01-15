@@ -3,8 +3,6 @@ import {
   View,
   Text,
   Image,
-  Alert,
-  FlatList,
   TextInput,
   Dimensions,
   SafeAreaView,
@@ -22,8 +20,6 @@ import Animated, {
   useAnimatedScrollHandler,
 } from "react-native-reanimated";
 
-import { ScreenContainer } from "../../../common/components/ScreenContainer";
-
 import { itemStyles, inputStyles } from "./styles";
 
 import CustomTouchable from "../../../common/components/CustomTouchable";
@@ -40,10 +36,6 @@ export const HomeScreen = ({ navigation, item }) => {
   const mockItemData = orderStore.data;
 
   const { width, height } = Dimensions.get("screen");
-
-  const handleButtonPress = () => {
-    Alert.alert("Added to cart");
-  };
 
   const [text, onChangeText] = useState("");
   const [refreshing, setRefreshing] = useState(false);
@@ -161,15 +153,12 @@ export const HomeScreen = ({ navigation, item }) => {
                   onPress={() => handleButtonPress()}
                   style={itemStyles.buyButton}
                 >
-                  <TouchableOpacity
-                    style={{ backgroundColor: "yellow" }}
-                    onPress={() => onItemBuy(item)}
-                  >
+                  <TouchableOpacity onPress={() => onItemBuy(item)}>
                     <Text style={itemStyles.buyButtonText}>Buy</Text>
                   </TouchableOpacity>
                 </CustomTouchable>
                 <CustomTouchable
-                  onPress={() => handleButtonPress()}
+                  onPress={() => onItemBuy(item)}
                   style={itemStyles.cartButton}
                 >
                   <Image source={cart} style={itemStyles.cartIcon} />

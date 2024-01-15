@@ -127,7 +127,7 @@ export const itemStyles = StyleSheet.create({
   buyButton: {},
 
   buyButtonText: {
-    fontSize: 15,
+    fontSize: 17,
   },
 
   cartButton: {},
@@ -144,7 +144,6 @@ export const inputStyles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
-    // minHeight: 64,
     marginLeft: 10,
   },
 
