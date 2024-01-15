@@ -1,16 +1,19 @@
+import { useEffect } from "react";
 import { Text, Image, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { observer } from "mobx-react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { HomeScreen } from "../screens/home/screens/HomeScreen";
 import { PizzaScreen } from "../screens/home/screens/PizzaScreen";
 import { ModalScreen } from "../screens/home/screens/ModalScreen";
 import { BasketScreen } from "../screens/home/screens/BasketScreen";
-import { SettingsScreen } from "../screens/home/screens/SettingsScreen";
+import { RegistrationScreen } from "../screens/home/screens/RegistrationScreen";
+import { AccountScreen } from "../screens/home/screens/AccountScreen";
 
-import settingsIcon from "../utils/img/settings-icon.png";
+import accountIcon from "../utils/img/account.png";
 import homeIcon from "../utils/img/home-icon.png";
 import basketIcon from "../utils/img/shopping-cart.png";
 
@@ -36,6 +39,28 @@ const HomeStack = () => {
     navigation.setOptions({
       goBackCallBack: () => {},
     });
+  };
+
+  useEffect(() => {
+    // Check user registration status
+    checkRegistrationStatus(navigation);
+  }, [navigation]);
+
+  const checkRegistrationStatus = async (navigation) => {
+    // Check if user data exists in local storage
+    try {
+      const userData = await AsyncStorage.getItem("userData");
+      const isLoggedIn = userData !== null;
+
+      // Navigate based on user registration status
+      if (isLoggedIn) {
+        navigation.replace("Home");
+      } else {
+        navigation.replace("Registration");
+      }
+    } catch (error) {
+      console.error("Error reading user data:", error);
+    }
   };
 
   return (
@@ -73,6 +98,8 @@ const HomeStack = () => {
           headerLeft: HeaderLeft,
         }}
       />
+      <HomeStack.Screen name="Registration" component={RegistrationScreen} />
+      <HomeStack.Screen name="Account" component={AccountScreen} />
     </HomeStack.Navigator>
   );
 };
@@ -107,9 +134,7 @@ const TabBarIconBasket = observer((prop) => {
 });
 
 const TabBarIconSettings = () => {
-  return (
-    <Image style={{ width: 28, height: 28 }} source={settingsIcon}></Image>
-  );
+  return <Image style={{ width: 28, height: 28 }} source={accountIcon}></Image>;
 };
 
 const MyTabs = () => {
@@ -146,8 +171,8 @@ const MyTabs = () => {
         }}
       />
       <BottomTab.Screen
-        name="Settings"
-        component={SettingsScreen}
+        name="Account"
+        component={RegistrationScreen}
         options={{
           tabBarIcon: TabBarIconSettings,
         }}

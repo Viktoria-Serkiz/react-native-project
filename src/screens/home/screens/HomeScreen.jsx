@@ -19,6 +19,7 @@ import Animated, {
   useAnimatedStyle,
   useAnimatedScrollHandler,
 } from "react-native-reanimated";
+import { observer } from "mobx-react";
 
 import { itemStyles, inputStyles } from "./styles";
 
@@ -32,7 +33,7 @@ import favorite from "../../../utils/img/favorite.png";
 
 import * as colors from "../../../theme/colors";
 
-export const HomeScreen = ({ navigation, item }) => {
+export const HomeScreen = observer(({ navigation, item }) => {
   const mockItemData = orderStore.data;
 
   const { width, height } = Dimensions.get("screen");
@@ -213,4 +214,4 @@ export const HomeScreen = ({ navigation, item }) => {
       />
     </SafeAreaView>
   );
-};
+});

@@ -319,3 +319,19 @@ export const basketStyle = StyleSheet.create({
     backgroundColor: colors.backgroundForItem,
   },
 });
+
+export const loginPageStyles = StyleSheet.create({
+  headerLoginText: {
+    fontSize: 20,
+    paddingBottom: 10,
+  },
+
+  textInputLogin: {
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: colors.borderForItem,
+    alignSelf: "stretch",
+    padding: 20,
+   borderRadius: 20,
+  },
+});
