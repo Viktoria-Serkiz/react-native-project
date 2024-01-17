@@ -3,8 +3,6 @@ import {
   View,
   Text,
   Image,
-  Alert,
-  FlatList,
   TextInput,
   Dimensions,
   SafeAreaView,
@@ -12,9 +10,16 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
+import Animated, {
+  BounceIn,
+  BounceOut,
+  interpolate,
+  Extrapolation,
+  useSharedValue,
+  useAnimatedStyle,
+  useAnimatedScrollHandler,
+} from "react-native-reanimated";
 import { observer } from "mobx-react";
-
-import { ScreenContainer } from "../../../common/components/ScreenContainer";
 
 import { itemStyles, inputStyles } from "./styles";
 
@@ -28,18 +33,26 @@ import favorite from "../../../utils/img/favorite.png";
 
 import * as colors from "../../../theme/colors";
 
-export const HomeScreen = ({ navigation, item }) => {
+export const HomeScreen = observer(({ navigation, item }) => {
   const mockItemData = orderStore.data;
 
   const { width, height } = Dimensions.get("screen");
 
-  const handleButtonPress = () => {
-    Alert.alert("Added to cart");
-  };
-
   const [text, onChangeText] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [additionalData, setAdditionalData] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const scrollY = useSharedValue(0);
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y;
+  });
+
+  const animatedHeader = useAnimatedStyle(() => ({
+    height: interpolate(scrollY.value, [0, 64], [64, 0], Extrapolation.CLAMP),
+    opacity: interpolate(scrollY.value, [0, 64], [1, 0]),
+  }));
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -141,15 +154,12 @@ export const HomeScreen = ({ navigation, item }) => {
                   onPress={() => handleButtonPress()}
                   style={itemStyles.buyButton}
                 >
-                  <TouchableOpacity
-                    style={{ backgroundColor: "yellow" }}
-                    onPress={() => onItemBuy(item)}
-                  >
+                  <TouchableOpacity onPress={() => onItemBuy(item)}>
                     <Text style={itemStyles.buyButtonText}>Buy</Text>
                   </TouchableOpacity>
                 </CustomTouchable>
                 <CustomTouchable
-                  onPress={() => handleButtonPress()}
+                  onPress={() => onItemBuy(item)}
                   style={itemStyles.cartButton}
                 >
                   <Image source={cart} style={itemStyles.cartIcon} />
@@ -164,30 +174,34 @@ export const HomeScreen = ({ navigation, item }) => {
   );
 
   return (
-    <ScreenContainer>
-      <View style={inputStyles.inputWrapper}>
-        <TextInput
-          style={inputStyles.input}
-          onChangeText={(value) => orderStore.setInput(value)}
-          value={orderStore.input}
-          placeholder="Search..."
-          keyboardType="default"
-          keyboardAppearance="default"
-          placeholderTextColor={colors.red}
-        />
+    <SafeAreaView style={{ flex: 1 }}>
+      <Animated.View style={[inputStyles.inputWrapper, animatedHeader]}>
+        {isVisible && (
+          <Animated.View entering={BounceIn} exiting={BounceOut}>
+            <TextInput
+              style={inputStyles.input}
+              onChangeText={(value) => orderStore.setInput(value)}
+              value={orderStore.input}
+              placeholder="Search..."
+              keyboardType="default"
+              keyboardAppearance="default"
+              placeholderTextColor={colors.red}
+            />
+          </Animated.View>
+        )}
 
         <View style={inputStyles.iconsWrapper}>
           <CustomTouchable onPress={() => navigateToModal(item)}>
             <Image source={favorite} style={inputStyles.favorite}></Image>
           </CustomTouchable>
 
-          <CustomTouchable>
+          <CustomTouchable onPress={() => setIsVisible(!isVisible)}>
             <Image source={search} style={inputStyles.search}></Image>
           </CustomTouchable>
         </View>
-      </View>
+      </Animated.View>
 
-      <FlatList
+      <Animated.FlatList
         data={orderStore.filteredArray}
         keyExtractor={(item, index) => index + ""}
         renderItem={renderItem}
@@ -196,7 +210,8 @@ export const HomeScreen = ({ navigation, item }) => {
         }
         onEndReached={loadMoreData}
         onEndReachedThreshold={0.1}
+        onScroll={scrollHandler}
       />
-    </ScreenContainer>
+    </SafeAreaView>
   );
-};
+});

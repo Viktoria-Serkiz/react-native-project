@@ -72,7 +72,7 @@ export const BasketScreen = observer(({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, padding: 16 }}>
       <TouchableOpacity onPress={navigateBack}>
-        <Text style={{ fontSize: 15, marginBottom: 10 }}>Basket Screen</Text>
+        <Text style={{ fontSize: 15, marginBottom: 10 }}>Choose pizza</Text>
       </TouchableOpacity>
 
       <View style={{ alignItems: "center" }}>
