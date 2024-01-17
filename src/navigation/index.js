@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Text, Image, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -41,23 +41,18 @@ const HomeStack = () => {
     });
   };
 
-  useEffect(() => {
-    // Check user registration status
-    checkRegistrationStatus(navigation);
-  }, [navigation]);
+  const [initialRoute, setInitialRoute] = useState("Registration");
 
-  const checkRegistrationStatus = async (navigation) => {
-    // Check if user data exists in local storage
+  useEffect(() => {
+    checkRegistrationStatus();
+  }, []);
+
+  const checkRegistrationStatus = async () => {
     try {
       const userData = await AsyncStorage.getItem("userData");
       const isLoggedIn = userData !== null;
 
-      // Navigate based on user registration status
-      if (isLoggedIn) {
-        navigation.replace("Home");
-      } else {
-        navigation.replace("Registration");
-      }
+      setInitialRoute(isLoggedIn ? "Home" : "Registration");
     } catch (error) {
       console.error("Error reading user data:", error);
     }
@@ -98,8 +93,8 @@ const HomeStack = () => {
           headerLeft: HeaderLeft,
         }}
       />
-      <HomeStack.Screen name="Registration" component={RegistrationScreen} />
       <HomeStack.Screen name="Account" component={AccountScreen} />
+      <HomeStack.Screen name="Registration" component={RegistrationScreen} />
     </HomeStack.Navigator>
   );
 };
