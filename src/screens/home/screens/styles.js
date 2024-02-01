@@ -327,11 +327,11 @@ export const loginPageStyles = StyleSheet.create({
   },
 
   textInputLogin: {
+    width: 350,
     marginBottom: 15,
     borderWidth: 1,
     borderColor: colors.borderForItem,
-    alignSelf: "stretch",
     padding: 20,
-   borderRadius: 20,
+    borderRadius: 20,
   },
 });

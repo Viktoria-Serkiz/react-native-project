@@ -4,30 +4,30 @@
     "slug": "name",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/utils/img/icon.png",
+    "icon": "./src/utils/img/pizza-masters-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./src/utils/img/splash.png",
+      "image": "./src/utils/img/splash-screen.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#E6DCD3"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "splash": {
-        "image": "./src/utils/img/splash.png",
+        "image": "./src/utils/img/splash-screen.png",
         "resizeMode": "contain",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#E6DCD3"
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/utils/img/icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./src/utils/img/adaptive-i.png",
+        "backgroundColor": "#E6DCD3"
       }
     },
     "web": {
-      "favicon": "./src/utils/img/splash.png"
+      "favicon": "./src/utils/img/splash-screen.png"
     }
   }
 }

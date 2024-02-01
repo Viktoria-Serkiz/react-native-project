@@ -52,37 +52,39 @@ export const RegistrationScreen = ({ navigation }) => {
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text style={loginPageStyles.headerLoginText}>Welcome!</Text>
         <Text style={loginPageStyles.headerLoginText}>Log in</Text>
-        <TextInput
-          placeholder="Name"
-          value={name}
-          onChangeText={(text) => setName(text)}
-          style={[
-            loginPageStyles.textInputLogin,
-            { borderColor: isNameValid ? "black" : "red" },
-          ]}
-        />
-        <TextInput
-          placeholder="Surname"
-          value={surname}
-          onChangeText={(text) => setSurname(text)}
-          style={[
-            loginPageStyles.textInputLogin,
-            {
-              borderColor: isSurnameValid ? "black" : "red",
-            },
-          ]}
-        />
-        <TextInput
-          placeholder="Phone Number"
-          value={phoneNumber}
-          onChangeText={(text) => setPhoneNumber(text)}
-          style={[
-            loginPageStyles.textInputLogin,
-            {
-              borderColor: isPhoneNumberValid ? "black" : "red",
-            },
-          ]}
-        />
+        <View>
+          <TextInput
+            placeholder="Name"
+            value={name}
+            onChangeText={(text) => setName(text)}
+            style={[
+              loginPageStyles.textInputLogin,
+              { borderColor: isNameValid ? "black" : "red" },
+            ]}
+          />
+          <TextInput
+            placeholder="Surname"
+            value={surname}
+            onChangeText={(text) => setSurname(text)}
+            style={[
+              loginPageStyles.textInputLogin,
+              {
+                borderColor: isSurnameValid ? "black" : "red",
+              },
+            ]}
+          />
+          <TextInput
+            placeholder="Phone Number"
+            value={phoneNumber}
+            onChangeText={(text) => setPhoneNumber(text)}
+            style={[
+              loginPageStyles.textInputLogin,
+              {
+                borderColor: isPhoneNumberValid ? "black" : "red",
+              },
+            ]}
+          />
+        </View>
         <Button
           title="Register"
           onPress={handleRegistration}
